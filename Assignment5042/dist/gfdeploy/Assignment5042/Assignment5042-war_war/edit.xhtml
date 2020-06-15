@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"      
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <h:outputStylesheet library="css" name="bootstrap.min.css"></h:outputStylesheet>
+        <title>Edit Vegetable</title> 
+    </h:head>
+    <h:body>
+        <div class="container">
+            <div class="navbar navbar-inverse">
+                <div class="navbar-brand">
+                    Edit Vegetable Details
+                </div>
+            </div>
+
+            <h:form id="MyForm">
+                <table class="table table-bordered ">
+
+                     <tr>
+                        <td width ="150" valign="top">Id:</td>
+                        
+                        <td valign="bottom">
+                            <h:outputLabel id = "Id" >#{vegetableController.vegetable.vegId}</h:outputLabel>    
+                        </td>
+                    </tr>
+                     <tr>
+                        <td width ="100" valign="top">Description:</td>
+                        
+                        <td valign="bottom">
+                             
+                            <h:inputText id = "Description" value="#{vegetableController.vegetable.vegetableDescription}" binding="#{vegetableDescription}" required="true"
+                                         validatorMessage="Please enter a valid description."
+                                         requiredMessage="Please enter a description."></h:inputText> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width ="100" valign="top">Name: </td>
+                        
+                        <td valign="bottom"> 
+                            <h:inputText id = "Name" value="#{vegetableController.vegetable.vegetableName}" binding="#{vegetableName}" required="true"
+                                         validatorMessage="Please enter a valid name."
+                                         requiredMessage="Please enter a name."></h:inputText> 
+                        </td>
+                    </tr>  
+                    
+                    
+                   <tr>
+                                <td width ="100" valign="top">Vendor : </td>
+                                <td>
+                                    <h:selectOneMenu id="vendor" value="#{vegetableController.vegetable.vendor}" converter="vendorConverter">
+                                        <f:selectItem itemValue="#{null}" itemLabel="--select--" />
+                                        <f:selectItems value="#{vegetableManagedBean.allVendor}" var="c"  
+                                                       itemLabel="#{c.vendor}" itemValue="#{c}" />
+                                    </h:selectOneMenu>
+                                </td>
+                                                                
+                            </tr>  
+                    
+                    
+                     <tr>
+                        <td width ="100" valign="top">Country : </td>
+                                <td>
+                                    <h:selectOneMenu id="country" value="#{vegetableController.vegetable.country}" converter="countryConverter">
+                                        <f:selectItem itemValue="#{null}" itemLabel="--select--" />
+                                        <f:selectItems value="#{vegetableManagedBean.allCountry}" var="c"  
+                                                       itemLabel="#{c.country}" itemValue="#{c}" />
+                                    </h:selectOneMenu>
+                                </td>
+                    </tr>
+                    
+                    
+                </table>
+                
+                <h:commandButton id="save" value="Save" action="#{vegetableManagedBean.editVegetable(vegetableController.vegetable)}"  class="btn btn-primary" >
+                    <f:param name="vegetableID" value="#{vegetableController.vegId+1}"/>
+                </h:commandButton>
+                &nbsp; &nbsp;
+                <h:commandButton id="Close" value="Back" action="home.xhtml" class="btn btn-primary" >
+                    <f:param name="vegetableID" value="#{vegetableController.vegId + 1}"/>
+                </h:commandButton> 
+            </h:form>
+            
+            <h:outputLink value="index.xhtml">Log out</h:outputLink>
+        </div>
+    </h:body>
+</html>
+

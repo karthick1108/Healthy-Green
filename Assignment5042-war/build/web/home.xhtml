@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"      
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+    <h:head>
+        <h:outputStylesheet library="css" name="bootstrap.min.css"></h:outputStylesheet>
+        <title>User Home</title> 
+    </h:head>
+    <h:body>
+        <div class="container">
+            <div class="navbar navbar-inverse">
+                <div class="navbar-brand">
+                    Vegetable List
+                </div>
+            </div>  
+            <h4>Hello User</h4>
+            <h:form id="MyForm">
+                <table class="table table-bordered table-striped">
+                    <!-- For each property in properties ArrayList... --> 
+                    <tr>
+                        <td> 
+                            <h:outputLabel id="Id" value="Id"  />
+                        </td>
+                        <td> 
+                            <h:outputLabel id="Name" value="Name"  />
+                        </td>
+
+                        <td> 
+                            <h:outputLabel id="Description" value="Description"/>
+                        </td>  
+                        <td> 
+                            <h:outputLabel id="Action" value="Action"/>
+                        </td>  
+                    </tr>
+
+                    <ui:repeat id="Myrepeat" value="#{vegetableApplication.vegetableInfo}"  var="vegetable" varStatus="status"> 
+
+                        <tr onclick="document.getElementById('MyForm:principle').value = document.getElementById('MyForm:Myrepeat:#{status.index}:outVegetableName').textContent"> 
+                            <td>
+                                <h:outputText value="#{vegetableApplication.vegetableInfo.get(status.index).vegId}" id="vegetableID" />                                
+                            </td>
+
+                            <td> 
+                                <h:outputText id="outName" value="#{vegetableApplication.vegetableInfo.get(status.index).vegetableName}"  />
+                            </td>
+                            <td>
+                                <h:outputText id="outDesc" value="#{vegetableApplication.vegetableInfo.get(status.index).vegetableDescription}"></h:outputText>
+                            </td>
+                            <td>
+                                <h:commandLink value="View | " action="detail.xhtml" disabled="#{vegetableApplication.vegetableInfo.get(status.index).vegId == null}">
+
+                                    <f:param name="vegetableID" value="#{status.index + 1}"/>
+
+                                </h:commandLink>
+                                <h:commandLink value="Edit | " action="edit.xhtml" disabled="#{vegetableApplication.vegetableInfo.get(status.index).vegId == null}">
+
+                                    <f:param name="vegetableID"  value="#{status.index + 1}"></f:param> 
+                                </h:commandLink>
+
+
+                                <h:outputText value=" "/>
+                            </td>
+                        </tr>
+                    </ui:repeat>
+
+                </table>
+
+                <div>
+                    <h:commandButton id="add" value="Add" action="add.xhtml" class="btn btn-primary" />
+                    &nbsp; &nbsp;
+                    <h:commandButton id="viewAll" value="View All (AJAX)" class="btn btn-primary" >
+                        <f:ajax execute="#{searchVegetable.searchAll()}" render="MyForm"/>
+                    </h:commandButton>
+                </div>
+                <div>
+                    <h:inputText value="#{searchVegetable.searchByInt}" id="searchById" required="true" onchange ="if (document.getElementById('MyForm:searchById').value.trim() == '') {
+                                document.getElementById('MyForm:searchById').value = 0;
+                            }
+                            "   /> 
+                    <h:commandButton id="searchId" value="Search by Id" action="#{searchVegetable.searchVegetableById(searchVegetable.searchByInt)}" class="btn btn-primary" >
+                        <f:param name="vegetableID" value="#{status.index + 1}"/>
+                    </h:commandButton>
+
+                    &nbsp; &nbsp;
+                    <h:inputText value="#{searchVegetable.searchByString}" id="searchByString" onchange="if (document.getElementById('MyForm:searchByString').value.trim() == '') {
+                                document.getElementById('MyForm:searchByString').value = 0;
+                            }
+                            " /> 
+                    <h:commandButton id="searchVegetable" value="Search by Vegetable (CRITERIA API)" action="#{searchVegetable.searchVegetableByName(searchVegetable.searchByString)}" class="btn btn-primary" >
+                        <f:param name="vegetableID" value="#{status.index + 1}"/>
+                    </h:commandButton>
+
+                    &nbsp; &nbsp;
+                    
+                    <input type="text" id="vegId" value="#{vegetableManagedBean.vegId}"/>
+                    <a href='' onclick="this.href='http://localhost:8080/Assignment5042-war/webresources/restAPI/welcome/'+document.getElementById('vegId').value">Search by Veg Id(REST)</a>
+
+                    <br> </br>
+                    <h5>Select vendor and country name respectively for combine search</h5>
+
+                    &nbsp; &nbsp;
+                    <h:selectOneMenu id="vendor" value="#{searchVegetable.vendorId}" >
+                        <f:selectItem itemValue="#{null}" itemLabel="--select--" />
+                        <f:selectItems value="#{vegetableManagedBean.allVendor}" var="v"  
+                                       itemLabel="#{v.vendor}" itemValue="#{v.vendorId}" />
+                    </h:selectOneMenu>
+
+                    <h:selectOneMenu id="country" value="#{searchVegetable.countryId}" >
+                        <f:selectItem itemValue="#{null}" itemLabel="--select--" />
+                        <f:selectItems value="#{vegetableManagedBean.allCountry}" var="c"  
+                                       itemLabel="#{c.country}" itemValue="#{c.countryId}" />
+                    </h:selectOneMenu>
+                    &nbsp; &nbsp;   
+                    <h:commandButton id="combineSearchByVC" value="Combine Search(FK)" action="#{searchVegetable.combineSearchByFK(searchVegetable.vendorId,searchVegetable.countryId)}" class="btn btn-primary" >
+                        <f:param name="vegetableID" value="#{status.index + 1}"/>
+                    </h:commandButton>
+                    <br> </br>
+                    
+                </div>           
+                <h:outputLink value="index.xhtml">Log out</h:outputLink>
+            </h:form>
+        </div>
+    </h:body>
+</html>
+
